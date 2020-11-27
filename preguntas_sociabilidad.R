@@ -51,10 +51,6 @@ Matrix_pnud[,12] = p17_all_mean$P17.12
 # las otras data frames.
 dataf_pnud <- as.data.frame(dataf_pnud)
 
-
-P17_1_12 <- c(p17_all_mean$P17.1:p17_all_mean$P17.12)
-as.data.frame(P17_1_12)
-
 # Para ordenar de menor a mayor la data.frame:
 
 dataf_pnud_ord <- dataf_pnud %>%
