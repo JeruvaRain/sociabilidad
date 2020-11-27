@@ -24,7 +24,7 @@ View(PNUD_IDH_2012_SPSS)
                         )
 #################################
 # Remover valores por encima del 10
-
+# Esto se puede sintetizar con el uso de una función que no he podido crear aún.
 #17.1
 p17_all$P17.1[p17_all$P17.1 == 77] <- NA
 p17_all$P17.1[p17_all$P17.1 == 88] <- NA
@@ -37,7 +37,7 @@ p17_all$P17.2[p17_all$P17.2 == 99] <- NA
 p17_all$P17.3[p17_all$P17.3 == 77] <- NA
 p17_all$P17.3[p17_all$P17.3 == 88] <- NA
 p17_all$P17.3[p17_all$P17.3 == 99] <- NA
-
+#17.4
 p17_all$P17.4[p17_all$P17.4 == 77] <- NA
 p17_all$P17.4[p17_all$P17.4 == 88] <- NA
 p17_all$P17.4[p17_all$P17.4 == 99] <- NA
