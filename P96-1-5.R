@@ -51,7 +51,7 @@ names(p96df) <- c("Pregunta", "Valor")
 
 # Bars
 ggplot()+
-  geom_bar(p96df, mapping = aes(Pregunta, Valor), stat = "identity", fill = c(1:5))+
+  geom_bar(p96df, mapping = aes(Pregunta, Valor), stat = "identity", fill = c(2,6,8,11,20))+
   ggtitle("Promedios: preguntas 96.1 a 96.5")+
   xlab("")+
   ylab("")
