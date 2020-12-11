@@ -1,5 +1,4 @@
 # sociabilidad
 
-Graficado el primer set de promedios de preguntas, P17.1 a P17.12. Nombre del archivo: preguntas_sociabilidad.R
-
-Graficado el promedio del set de preguntas 96.1~96.5. Nombre del archivo: P96-1-5.
+Actualizados todos los códigos hacia un RMarkdown con todas las preguntas.
+Los códigos anteriores se encuentran en la carpeta "old codes".
