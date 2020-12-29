@@ -53,23 +53,17 @@ P122.3 ¿SIENTE QUE LE RECONOCEN TODO EL ESFUERZO O APORTE QUE USTED HACE EN SU 
 ## PNUD2009
 
 Invertir preguntas 
-P101_A
-P101_B
-P101_C
-P102_A
-P102_B
-P102_C
-P102_D
-P102_E
-P103_A
-P103_B
+p101_a y de este tiempo libre, ¿cuánto diría usted que se lo dedica a....?a. su familia
+p101_b y de este tiempo libre, ¿cuánto diría usted que se lo dedica a....?b. sus cosas personales
+p101_c y de este tiempo libre, ¿cuánto diría usted que se lo dedica a....?c. sus amigos
+p102_a ¿con qué frecuencia realiza usted las siguientes actividades con su familia? a. conversar
+p102_b ¿con qué frecuencia realiza usted las siguientes actividades con su familia? b. ver televisión juntos
+p102_c ¿con qué frecuencia realiza usted las siguientes actividades con su familia? c. comer juntos
+p102_d ¿con qué frecuencia realiza usted las siguientes actividades con su familia? d. salir fuera juntos a pasear y divertirse
+p102_e ¿con qué frecuencia realiza usted las siguientes actividades con su familia? e. comprar juntos
 
 P15 Con respecto al tema de la amistad, usted diría que...
 P16 En el último mes, ¿cuántas veces ha sido invitado a la casa de amigos o invitado a salir?
-P17_A Cuando usted piensa que está en lo correcto, ¿está dispuesto a ir en contra de lo que piensan…?A. SUS PADRES
-P17_B Cuando usted piensa que está en lo correcto, ¿está dispuesto a ir en contra de lo que piensan…?B. LA IGLESIA
-P17_C Cuando usted piensa que está en lo correcto, ¿está dispuesto a ir en contra de lo que piensan…?C. SU PAREJA
-P17_D Cuando usted piensa que está en lo correcto, ¿está dispuesto a ir en contra de lo que piensan…?D. SU JEFE
 
 P114 Usted diría que en la actualidad, las familias en Chile son más bien…
 
