@@ -11,7 +11,8 @@
 Camilo: 
 - precisar pregunta sólo para sociablidad de la amistad, pública o generalizada. 
     - excluir familiar y otras preguntas generales
--     
+
+
 
 
 ## PNUD2012
