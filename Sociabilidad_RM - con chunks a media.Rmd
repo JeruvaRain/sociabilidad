@@ -1,0 +1,328 @@
+---
+title: "Sociabilidad"
+author: "Jeruva"
+date: "9/12/2020"
+output: html_document
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+#ENCUESTA PNUD 2012
+
+## Instalar y cargar librerías
+
+```{r}
+install.packages("naniar")
+
+# Librerías a utilizar
+library(dplyr)
+library(ggplot2)
+library(tidyverse)
+library(haven)
+library(data.table)
+library(naniar) #For replacing NA's
+
+PNUD_IDH_2012_SPSS <- read_sav("PNUD IDH 2012 SPSS.sav")
+
+
+```
+
+
+## Separar las preguntas hacia nuevos objetos
+
+```{r}
+
+p96 <- data.frame(P96.1 = PNUD_IDH_2012_SPSS$P96.1,
+                  P96.2 = PNUD_IDH_2012_SPSS$P96.2,
+                  P96.3 = PNUD_IDH_2012_SPSS$P96.3,
+                  P96.4 = PNUD_IDH_2012_SPSS$P96.4,
+                  P96.5 = PNUD_IDH_2012_SPSS$P96.5) %>%
+  
+
+p117 <- data.frame(P117.1 = PNUD_IDH_2012_SPSS$P117.1,
+                  P117.2 = PNUD_IDH_2012_SPSS$P117.2,
+                  P117.3 = PNUD_IDH_2012_SPSS$P117.3,
+                  P117.4 = PNUD_IDH_2012_SPSS$P117.4) %>%
+
+p118_9 <- data.frame(P118 = PNUD_IDH_2012_SPSS$P118,
+                     P119 = PNUD_IDH_2012_SPSS$P119) %>%
+
+p121 <- data.frame(P121.1 = PNUD_IDH_2012_SPSS$P121.1,
+                   P121.2 = PNUD_IDH_2012_SPSS$P121.2,
+                   P121.3 = PNUD_IDH_2012_SPSS$P121.3) %>%
+              
+p122 <- data.frame(P122.1 = PNUD_IDH_2012_SPSS$P122.1,
+                   P122.2 = PNUD_IDH_2012_SPSS$P122.2,
+                   P122.3 = PNUD_IDH_2012_SPSS$P122.3) %>%
+                   
+p139 <- data.frame(P139.1 = PNUD_IDH_2012_SPSS$P139.1,
+                   P139.2 = PNUD_IDH_2012_SPSS$P139.2,
+                   P139.3 = PNUD_IDH_2012_SPSS$P139.3,
+                   P139.4 = PNUD_IDH_2012_SPSS$P139.4,
+                   P139.5 = PNUD_IDH_2012_SPSS$P139.5,
+                   P139.6 = PNUD_IDH_2012_SPSS$P139.6,
+                   P139.7 = PNUD_IDH_2012_SPSS$P139.7,
+                   P139.8 = PNUD_IDH_2012_SPSS$P139.8,
+                   P139.9 = PNUD_IDH_2012_SPSS$P139.9)
+
+```
+
+
+## Remover los NA's
+
+```{r}
+
+p96n <- p96 %>% replace_with_na(replace = list(P96.1 = c(77, 88, 99),
+                                      P96.2 = c(77, 88, 99),
+                                      P96.2 = c(77, 88, 99),
+                                      P96.3 = c(77, 88, 99),
+                                      P96.4 = c(77, 88, 99),
+                                      P96.5 = c(77, 88, 99))) %>%
+
+p117n <- p117 %>% replace_with_na(replace = list(P117.1 = c(77, 88, 99),
+                                        P117.2 = c(77, 88, 99),
+                                        P117.3 = c(77, 88, 99),
+                                        P117.4 = c(77, 88, 99)) %>%
+                                        
+p118_9n <- P118_9 %>% replace_with_na(replace = list(P118 = c(88, 99),
+                                                     P119 = c(88, 99))) %>%
+                                                     
+p121n <- p121 %>% replace_with_na(replace = list(P121.1 = c(77, 88, 99),
+                                                 P121.2 = c(77, 88, 99),
+                                                 P121.3 = c(77, 88, 99))) %>%
+                                                 
+p122n <- p122 %>% replace_with_na(replace = list(P122.1 = c(77, 88, 99),
+                                                 P122.2 = c(77, 88, 99),
+                                                 P122.3 = c(77, 88, 99))) %>%
+                                                 
+p139n <- p139 %>% replace_with_na(replace = list(P139.1 = c(77, 88, 99),
+                                                 P139.2 = c(77, 88, 99),
+                                                 P139.3 = c(77, 88, 99),
+                                                 P139.4 = c(77, 88, 99),
+                                                 P139.5 = c(77, 88, 99),
+                                                 P139.6 = c(77, 88, 99),
+                                                 P139.7 = c(77, 88, 99),
+                                                 P139.8 = c(77, 88, 99),
+                                                 P139.9 = c(77, 88, 99)))
+
+
+```
+
+
+
+## Transformar el df anterior utilizando un transpose para ello (t)
+
+```{r}
+
+p96nf <- as.data.frame(t(p96n)) %>%
+p117nf <- as.data.frame(t(p117n)) %>%
+p118_9nf <- as.data.frame(t(P118_9n)) %>%
+p121nf <- as.data.frame(t(p121n)) %>%
+p122nf <- as.data.frame(t(p122n)) %>%
+p139nf <- as.data.frame(t(p139n))
+
+```
+
+## Obtener el promedio de cada fila y cambiar los nombres del data.frame
+
+```{r}
+
+p96mean <- rowMeans(p96nf, na.rm = TRUE) %>%
+p117mean <- rowMeans(p117nf, na.rm = TRUE) %>%
+p118_9mean <- rowMeans(P118_9nf, na.rm = TRUE) %>%
+p121mean <- rowMeans(p121nf, na.rm = TRUE) %>%
+p122mean <- rowMeans(p122nf, na.rm = TRUE) %>%
+p139mean <- rowMeans(p139nf, na.rm = TRUE)
+
+
+```
+
+
+## Cambiar los nombres del data.frame
+
+```{r}
+
+
+p96df <- data.frame(p96mean) %>%
+setDT(p96df, keep.rownames = TRUE) %>% 
+names(p96df) <- c("Pregunta", "Valor") %>%
+
+p117df <- data.frame(p117mean) %>%
+setDT(p117df, keep.rownames = TRUE) %>%
+names(p117df) <- c("Pregunta", "Valor") %>%
+
+p118_9df <- data.frame(P118_9mean) %>%
+setDT(P118_9df, keep.rownames = TRUE) %>%
+names(P118_9df) <- c("Pregunta", "Valor") %>%
+
+p121df <- data.frame(p121mean) %>%
+setDT(p121df, keep.rownames = TRUE) %>%
+names(p121df) <- c("Pregunta", "Valor") %>%
+
+p122df <- data.frame(p122mean) %>%
+setDT(p122df, keep.rownames = TRUE) %>%
+names(p122df) <- c("Pregunta", "Valor") %>%
+
+p139df <- data.frame(p139mean) %>%
+setDT(p139df, keep.rownames = TRUE) %>%
+names(p139df) <- c("Pregunta", "Valor")
+
+
+```
+
+
+
+
+## PLOTTING 
+
+# 96.1:96.5
+ggplot()+
+  geom_bar(p96df, mapping = aes(Pregunta, Valor), stat = "identity", fill = c(2,6,8,11,20))+
+  ggtitle("Promedios: preguntas 96.1 a 96.5")+
+  xlab("")+
+  ylab("")
+
+# 117.1:117.4
+ggplot()+
+  geom_bar(p117df, mapping = aes(Pregunta, Valor), stat = "identity", 
+           position = "dodge", width = 0.5, fill = c("black", "darkblue", "brown", "darkgreen"))+
+  ggtitle("Promedios de preguntas 117")+
+  theme_linedraw()
+  xlab("")+
+  ylab("")
+  
+# 118, 119
+ggplot()+
+  geom_bar(P118_9df, mapping = aes("P118"), width = 0.5)+
+  geom_bar(P118_9df, mapping = aes("P119"), width = 0.5)+
+  facet_wrap(~"P118")+
+  scale_y_discrete(name = "Total",  limits = c(0,0.5,1, 1.5, 2, 2.5))
+  xlab("")+
+  ylab("")
+
+# 121.1:121.3
+ggplot()+
+  geom_bar(p121df, mapping = aes(Pregunta, Valor), stat = "identity", width = 0.6)+
+  theme_classic()
+  xlab("")+
+  ylab("")
+  
+# 122.1:122.3
+ggplot()+
+  geom_bar(p122df, mapping = aes(Pregunta, Valor), stat = "identity", width = 0.7)+
+  theme_classic()
+  xlab("")+
+  ylab("")
+
+# 139.1:139.9
+ggplot()+
+  geom_bar(p139df, mapping = aes(Pregunta, Valor), stat = "identity", width = 0.6)+
+  theme_classic()
+  xlab("")+
+  ylab("")
+  
+```
+
+#ENCUESTA PNUD 2009 
+
+```{r}
+
+dir()
+
+swd 
+
+#Librerías
+
+library(dplyr)
+library(ggplot2)
+library(tidyverse)
+library(haven)
+library(data.table)
+library(naniar) #For replacing NA's
+
+PNUD_IDH_2009_SPSS <- read_csv("PNUD_IDH_2009_SPSS.sav")
+
+```
+
+
+```{r}
+
+
+## Archivo a utilizar
+
+# P12 Generalmente las personas como usted
+
+# Separar las preguntas
+
+# P15
+Preguntas <- data.frame(P15 = PNUD_IDH_2009_SPSS$P15,
+                        P16 = PNUD_IDH_2009_SPSS$P16,
+                        P17A = PNUD_IDH_2009_SPSS$P17_A,
+                        P17C = PNUD_IDH_2009_SPSS$P17_C,
+                        P29B = PNUD_IDH_2009_SPSS$P29_B,
+                        P62_1 = PNUD_IDH_2009_SPSS$P62_1,
+                        P62_2 = PNUD_IDH_2009_SPSS$P62_2,
+                        P63_1 = PNUD_IDH_2009_SPSS$P63_1,
+                        P63_2 = PNUD_IDH_2009_SPSS$P63_2,
+                        P101A = PNUD_IDH_2009_SPSS$P101_A,
+                        P101C = PNUD_IDH_2009_SPSS$P101_C,
+                        P102A = PNUD_IDH_2009_SPSS$P102_A,
+                        P102B = PNUD_IDH_2009_SPSS$P102_B,
+                        P102C = PNUD_IDH_2009_SPSS$P102_C,
+                        P102D = PNUD_IDH_2009_SPSS$P102_D,
+                        P102E = PNUD_IDH_2009_SPSS$P102_E,
+                        P108A = PNUD_IDH_2009_SPSS$P108_A,
+                        P108B = PNUD_IDH_2009_SPSS$P108_B,
+                        P108C = PNUD_IDH_2009_SPSS$P108_C,
+                        P108D = PNUD_IDH_2009_SPSS$P108_D,
+                        P114 = PNUD_IDH_2009_SPSS$P114)
+
+# REMOVER NA'S
+
+Preguntas_n <- Preguntas %>% replace_with_na(replace = list(P15 = c(8,9),
+                                                            P16 = c(8,9),
+                                                            P17A = c(5,8,9),
+                                                            P17C = c(5,8,9),
+                                                            P29B = c(8,9),
+                                                            P62_1 = c(8,9),
+                                                            P62_2 = c(8,9),
+                                                            P63_1 = c(8,9),
+                                                            P63_2 = c(8,9),
+                                                            P101A = c(8,9),
+                                                            P101C = c(8,9),
+                                                            P102A = c(8,9),
+                                                            P102B = c(8,9),
+                                                            P102C = c(8,9),
+                                                            P102D = c(8,9),
+                                                            P102E = c(8,9),
+                                                            P108A = c(88,98,99),
+                                                            P108B = c(88,98,99),
+                                                            P108C = c(88,98,99),
+                                                            P108D = c(88,98,99),
+                                                            P114 = c(8,9)))
+
+## Transformar el df anterior utilizando un transpose para ello (t)
+
+questions <- as.data.frame(t(Preguntas_n))
+
+## Obtener el promedio de cada fila y cambiar los nombres del data.frame
+
+q_mean <- rowMeans(questions, na.rm = TRUE)
+
+q <- data.frame(q_mean)
+setDT(q, keep.rownames = TRUE)
+names(q) <- c("Pregunta", "Valor")
+
+ggplot()+
+  geom_bar(q, mapping = aes(Pregunta, Valor), stat = "identity",
+           position = "dodge", width = 0.5)
+
+
+
+```
+
