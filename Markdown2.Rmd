@@ -44,8 +44,7 @@ replace_with_na(replace = list(P96.1 = c(88,99), P96.2 = c(88,99),
   sum(is.na(P96)) -> Per96NA
   # El número de NA's debería ser 141 en este caso.
   Per96NA * 100 / 2532 -> Per96NA
-  print("El porcentaje de NA's es: ")
-  Per96NA
+  cat(c("El", "porcentaje", "de", "NA's", "es:", floor(Per96NA)))
 ```
 
 ```{r}
@@ -77,6 +76,12 @@ ggplot()+
   xlab("")+
   ylab("")
 ```
+```{r}
+# Remover valores previos de la data anterior (excepto el PNUD2012)
+rm(P96M)
+rm(P96)
+rm(Per96NA)
+```
 
 ### Conjunto de preguntas 117
 ```{r}
@@ -88,8 +93,12 @@ P117 %>%
                                P117.3 = c(77,88,99), P117.4 = c(77,88, 99))) -> P117
 
   # Verificar cuántos valores fueron reemplazados por NA's
-  sum(is.na(P117))
+  sum(is.na(P117)) -> Per117NA
+  Per117NA
   # El número de NA's debería ser 39 en este caso.
+  
+  Per117NA * 100 / 2532 -> Per117NA
+  cat(c("El", "porcentaje", "de", "NA's", "es:", floor(Per117NA)))
   
 ```
 
@@ -122,4 +131,76 @@ ggplot()+
   ggtitle("Promedios: preguntas 117.1 a 117.4")+
   xlab("")+
   ylab("")
+```
+
+```{r}
+  # Remover valores previos
+  rm(P117)
+  rm(P117M)
+  rm(Per117NA)
+```
+
+# Conjunto de preguntas 118 y 119
+```{r}
+PNUD2012 %>%
+  select(P118) -> P118
+  select(P119) -> P119
+
+
+```
+
+# Conjunto de preguntas 121
+```{r}
+PNUD2012 %>%
+  select(P121.1:P121.3) -> P121
+
+P121 %>%
+  replace_with_na(list(P121.1 = c(88,99), P121.2 = c(88,99),
+                  P121.3 = c(88,99))) -> P121
+
+# Verificar cuántos valores fueron reemplazados por NA's
+  sum(is.na(P121)) -> Per121NA
+  Per121NA
+  # El número de NA's debería ser 106 en este caso.
+  
+  Per121NA * 100 / 2532 -> Per121NA
+  cat(c("El", "porcentaje", "de", "NA's", "es:", floor(Per121NA)))
+
+```
+
+```{r}
+# Utilizar un transpose para convertir a tablas
+P121 <- as.data.frame(t(P121))
+
+# Obtener los promedios
+P121M <- rowMeans(P121, na.rm = TRUE)
+
+# Reconvertir el resultado anterior a DF
+P121M <- data.frame(P121M)
+
+# Convertir a Data Table para graficar
+setDT(P121M, keep.rownames = TRUE)
+
+# Cambiar los nombres de las columnas
+names(P121M) <- c("Pregunta", "Valor")
+
+#Está listo para ser graficado
+```
+
+```{r}
+# Preguntas 121
+
+ggplot()+
+  geom_bar(P121M, mapping = aes(Pregunta, Valor), stat = "identity", 
+           fill =c(2,6,8))+
+  ggtitle("Promedios: preguntas 121.1 a 121.3")+
+  xlab("")+
+  ylab("")
+```
+
+```{r}
+ # Remover valores previos
+  rm(P121)
+  rm(P121M)
+  rm(Per121NA)
 ```
