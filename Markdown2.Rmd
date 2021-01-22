@@ -10,6 +10,10 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Second version
+Cambios en la segunda versión:
+  - Se optimizó el código, ahora se agrupan los subconjuntos de preguntas por gráfica.
+  - Se limpió el código para no modificar tanto la selección de columnas con la función {select}.
+  - Ahora arroja el número de datos omitidos (NA's) y el porcentaje de estos.
 
 ```{r}
 # Libraries
@@ -29,21 +33,19 @@ PNUD2012 <- read_sav("PNUD IDH 2012 SPSS.sav")
 ```{r}
 # Selección de las preguntas a trabajar y clasificar
 PNUD2012 %>%
- select(P96.1, P96.2, P96.3, P96.4, P96.5) -> P96
+ select(P96.1:P96.5) -> P96
+
 P96 %>%
-replace_with_na(replace = list(P96.1 = c(88,99))) -> P96
-P96 %>%
-replace_with_na(replace = list(P96.2 = c(88,99))) -> P96
-P96 %>%
-replace_with_na(replace = list(P96.3 = c(88,99))) -> P96
-P96 %>%
-replace_with_na(replace = list(P96.4 = c(88,99))) -> P96
-P96 %>%
-replace_with_na(replace = list(P96.5 = c(88,99))) -> P96
+replace_with_na(replace = list(P96.1 = c(88,99), P96.2 = c(88,99),
+                               P96.3 = c(88,99), P96.4 = c(88, 99),
+                               P96.5 = c(88,99))) -> P96
 
   # Verificar cuántos valores fueron reemplazados por NA's
-  sum(is.na(P96))
+  sum(is.na(P96)) -> Per96NA
   # El número de NA's debería ser 141 en este caso.
+  Per96NA * 100 / 2532 -> Per96NA
+  print("El porcentaje de NA's es: ")
+  Per96NA
 ```
 
 ```{r}
@@ -72,6 +74,52 @@ ggplot()+
   geom_bar(P96M, mapping = aes(Pregunta, Valor), stat = "identity", 
            fill =c(2,6,8,11,20))+
   ggtitle("Promedios: preguntas 96.1 a 96.5")+
+  xlab("")+
+  ylab("")
+```
+
+### Conjunto de preguntas 117
+```{r}
+PNUD2012 %>%
+  select(P117.1:P117.4) -> P117
+
+P117 %>%
+  replace_with_na(replace = list(P117.1 = c(77,88,99), P117.2 = c(77,88,99),
+                               P117.3 = c(77,88,99), P117.4 = c(77,88, 99))) -> P117
+
+  # Verificar cuántos valores fueron reemplazados por NA's
+  sum(is.na(P117))
+  # El número de NA's debería ser 39 en este caso.
+  
+```
+
+```{r}
+# Utilizar un transpose para convertir a tablas
+P117 <- as.data.frame(t(P117))
+
+# Obtener los promedios
+P117M <- rowMeans(P117, na.rm = TRUE)
+
+# Reconvertir el resultado anterior a DF
+P117M <- data.frame(P117M)
+
+# Convertir a Data Table para graficar
+setDT(P117M, keep.rownames = TRUE)
+
+# Cambiar los nombres de las columnas
+names(P117M) <- c("Pregunta", "Valor")
+
+#Está listo para ser graficado
+```
+
+## Conjunto de preguntas 117
+```{r}
+# Preguntas 117
+
+ggplot()+
+  geom_bar(P117M, mapping = aes(Pregunta, Valor), stat = "identity", 
+           fill =c(2,6,8,11))+
+  ggtitle("Promedios: preguntas 117.1 a 117.4")+
   xlab("")+
   ylab("")
 ```
