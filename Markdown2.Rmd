@@ -1,0 +1,77 @@
+---
+title: "Markdown2"
+author: "Jeruva"
+date: "21/1/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Second version
+
+```{r}
+# Libraries
+library(dplyr)
+library(ggplot2)
+library(tidyverse)
+library(haven)
+library(data.table)
+library(naniar) #For replacing NA's
+```
+
+```{r}
+# File
+PNUD2012 <- read_sav("PNUD IDH 2012 SPSS.sav")
+```
+
+```{r}
+# Selección de las preguntas a trabajar y clasificar
+PNUD2012 %>%
+ select(P96.1, P96.2, P96.3, P96.4, P96.5) -> P96
+P96 %>%
+replace_with_na(replace = list(P96.1 = c(88,99))) -> P96
+P96 %>%
+replace_with_na(replace = list(P96.2 = c(88,99))) -> P96
+P96 %>%
+replace_with_na(replace = list(P96.3 = c(88,99))) -> P96
+P96 %>%
+replace_with_na(replace = list(P96.4 = c(88,99))) -> P96
+P96 %>%
+replace_with_na(replace = list(P96.5 = c(88,99))) -> P96
+
+  # Verificar cuántos valores fueron reemplazados por NA's
+  sum(is.na(P96))
+  # El número de NA's debería ser 141 en este caso.
+```
+
+```{r}
+# Utilizar un transpose para convertir a tablas
+P96 <- as.data.frame(t(P96))
+
+# Obtener los promedios
+P96M <- rowMeans(P96, na.rm = TRUE)
+
+# Reconvertir el resultado anterior a DF
+P96M <- data.frame(P96M)
+
+# Convertir a Data Table para graficar
+setDT(P96M, keep.rownames = TRUE)
+
+# Cambiar los nombres de las columnas
+names(P96M) <- c("Pregunta", "Valor")
+
+#Está listo para ser graficado
+```
+
+```{r}
+# Pregunta 96
+
+ggplot()+
+  geom_bar(P96M, mapping = aes(Pregunta, Valor), stat = "identity", 
+           fill =c(2,6,8,11,20))+
+  ggtitle("Promedios: preguntas 96.1 a 96.5")+
+  xlab("")+
+  ylab("")
+```
