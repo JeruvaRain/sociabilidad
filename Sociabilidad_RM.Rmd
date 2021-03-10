@@ -1,16 +1,17 @@
 ---
 title: "Sociabilidad"
-author: "Jeruva"
-date: "9/12/2020"
+author: "Juan Rivera"
+date: "`r format(Sys.time(), '%d %B %Y')`"
 output: html_document
+params:
+  db: PNUD2012
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, include= FALSE}
+knitr::opts_chunk$set(fig.align = "center", echo = TRUE, warning = FALSE, collapse = TRUE)
 ```
 
-## Código
-```{r}
+```{r Librerías, include = FALSE}
 
 # Librerías a utilizar
 library(dplyr)
@@ -19,14 +20,14 @@ library(tidyverse)
 library(haven)
 library(data.table)
 library(naniar) #For replacing NA's
-```
-## Archivo a utilizar
-```{r}
+# Archivo a utilizar
 PNUD2012 <- read_sav("PNUD IDH 2012 SPSS.sav")
 ```
 
+
+```{r Transformación de la data, collapse= TRUE, include = FALSE }
 ## Separar las preguntas hacia nuevos objetos
-```{r}
+
 p96 <- data.frame(P96.1 = PNUD2012$P96.1,
                   P96.2 = PNUD2012$P96.2,
                   P96.3 = PNUD2012$P96.3,
@@ -58,35 +59,33 @@ p139 <- data.frame(P139.1 = PNUD2012$P139.1,
                    P139.7 = PNUD2012$P139.7,
                    P139.8 = PNUD2012$P139.8,
                    P139.9 = PNUD2012$P139.9)
-```
 
 ## Remover los NA's
 
-```{r}
-p96n <- p96  replace_with_na(replace = list(P96.1 = c(77, 88, 99),
+p96n <- p96 %>% replace_with_na(replace = list(P96.1 = c(77, 88, 99),
                                       P96.2 = c(77, 88, 99),
                                       P96.2 = c(77, 88, 99),
                                       P96.3 = c(77, 88, 99),
                                       P96.4 = c(77, 88, 99),
                                       P96.5 = c(77, 88, 99)))
 
-p117n <- p117  replace_with_na(replace = list(P117.1 = c(77, 88, 99),
+p117n <- p117 %>% replace_with_na(replace = list(P117.1 = c(77, 88, 99),
                                         P117.2 = c(77, 88, 99),
                                         P117.3 = c(77, 88, 99),
                                         P117.4 = c(77, 88, 99)))
                                         
-p118_9n <- p118_9  replace_with_na(replace = list(P118 = c(88, 99),
+p118_9n <- p118_9 %>% replace_with_na(replace = list(P118 = c(88, 99),
                                                      P119 = c(88, 99)))
                                                      
-p121n <- p121  replace_with_na(replace = list(P121.1 = c(77, 88, 99),
+p121n <- p121 %>% replace_with_na(replace = list(P121.1 = c(77, 88, 99),
                                                  P121.2 = c(77, 88, 99),
                                                  P121.3 = c(77, 88, 99)))
                                                  
-p122n <- p122  replace_with_na(replace = list(P122.1 = c(77, 88, 99),
+p122n <- p122 %>% replace_with_na(replace = list(P122.1 = c(77, 88, 99),
                                                  P122.2 = c(77, 88, 99),
                                                  P122.3 = c(77, 88, 99)))
                                                  
-p139n <- p139  replace_with_na(replace = list(P139.1 = c(77, 88, 99),
+p139n <- p139 %>% replace_with_na(replace = list(P139.1 = c(77, 88, 99),
                                                  P139.2 = c(77, 88, 99),
                                                  P139.3 = c(77, 88, 99),
                                                  P139.4 = c(77, 88, 99),
@@ -95,11 +94,9 @@ p139n <- p139  replace_with_na(replace = list(P139.1 = c(77, 88, 99),
                                                  P139.7 = c(77, 88, 99),
                                                  P139.8 = c(77, 88, 99),
                                                  P139.9 = c(77, 88, 99)))
-```
 
 ## Transformar el df anterior utilizando un transpose para ello (t)
 
-```{r}
 p96nf <- as.data.frame(t(p96n)) 
 p117nf <- as.data.frame(t(p117n)) 
 p118_9nf <- as.data.frame(t(p118_9n)) 
@@ -143,9 +140,9 @@ setDT(p139df, keep.rownames = TRUE)
 names(p139df) <- c("Pregunta", "Valor")
 ```
 
-## PLOTTING 
+## Resultados de la base de datos `r params$db` 
 
-```{r}
+```{r PLOTS}
 # 96.1:96.5
 ggplot()+
   geom_bar(p96df, mapping = aes(Pregunta, Valor), stat = "identity", fill = c(2,6,8,11,20))+
@@ -181,7 +178,7 @@ ggplot()+
 # 122.1:122.3 # OBTENER EL PORCENTAJE DE SÍ Y NO
 ggplot()+
   geom_bar(p122df, mapping = aes(Pregunta, Valor), stat = "identity", width = 0.7)+
-  theme_classic()
+  theme_classic()+
   xlab("")+
   ylab("")
 

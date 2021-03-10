@@ -1,21 +1,82 @@
 ---
-title: "Markdown2"
-author: "Jeruva"
-date: "21/1/2021"
-output: html_document
+title: "Sociabilidad"
+author: "Juan Rivera"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: 
+  html_document:
+    code_folding: show
+    toc: true
+    toc_float: true
+    toc_depth: 3
+params:
+  db: PNUD2012
 ---
+<!-- Dentro de <style> va el diseño visual del R Markdown -->
+<style>
+#TOC {
+  font-family: Calibri;
+  font-size: 16px; 
+  border-color: #708090;
+  }
+body {
+  background-color: #F5F5F5;
+  color: #333333;
+  font-family: Calibri;
+}
+
+pre {
+  background-color: #F8F8FF;
+}
+
+h1.title {
+  color: #F08080;
+  background-color: #F5F5F5;
+  font-family: Calibri;
+  font-size: 40px;
+}
+h4.author {
+  font-family: Calibri;
+  background-color: #F5F5F5;
+  font-size: 20px;
+}
+
+h4.date {
+  font-family: Calibri;
+  color: "red";
+}
+</style>
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(fig.align = "center", echo = TRUE, warning = FALSE, collapse = TRUE)
 ```
 
-## Second version
-Cambios en la segunda versión:
-  - Se optimizó el código, ahora se agrupan los subconjuntos de preguntas por gráfica.
-  - Se limpió el código para no modificar tanto la selección de columnas con la función {select}.
-  - Ahora arroja el número de datos omitidos (NA's) y el porcentaje de estos.
+# Progresos del R Markdown
 
-```{r}
+* Cambios en la segunda versión:
+  + Se optimizó el código, ahora se agrupan los subconjuntos de preguntas por gráfica.
+  + Se limpió el código para no modificar tanto la selección de columnas con la función {select}.
+  + Ahora arroja el número de datos omitidos (NA's) y el porcentaje de estos.
+* 10/03/2021
+  * Mejorado el código para R Markdown:
+    + Añadido TOC
+    + Añadidos params
+    + Añadidos collapse, warnings e includes (mostrar/no mostrar código en el R Markdown):
+      - No se muestra el chunk setup, librerías ni extracción y modificación de la data.
+
+# Introducción al R Markdown
+
+En el presente documento se intenta graficar mediante la base de datos `r params#db` las preguntas relacionadas con el tema de la sociabilidad en Chile.
+
+Arriba de cada chunk se puede ocultar o mostrar el código correspondiente a cada gráfica de los sets de preguntas seleccionados.
+
+La codificación completa se encuentra en el R Markdown que sirve para construir este documento html.
+
+El presente documento será actualizado a medida que se vaya avanzando en el análisis de los datos y se vayan haciendo las inferencias pertinentes. 
+
+El menú de la izquierda servirá para acceder más fácilmente a las gráficas.
+
+
+```{r libraries, include = FALSE}
 # Libraries
 library(dplyr)
 library(ggplot2)
@@ -25,13 +86,12 @@ library(data.table)
 library(naniar) #For replacing NA's
 ```
 
-```{r}
+```{r P96 data, include = FALSE}
 # File
 PNUD2012 <- read_sav("PNUD IDH 2012 SPSS.sav")
-```
 
-```{r}
 # Selección de las preguntas a trabajar y clasificar
+
 PNUD2012 %>%
  select(P96.1:P96.5) -> P96
 
@@ -45,9 +105,7 @@ replace_with_na(replace = list(P96.1 = c(88,99), P96.2 = c(88,99),
   # El número de NA's debería ser 141 en este caso.
   Per96NA * 100 / 2532 -> Per96NA
   cat(c("El", "porcentaje", "de", "NA's", "es:", floor(Per96NA)))
-```
 
-```{r}
 # Utilizar un transpose para convertir a tablas
 P96 <- as.data.frame(t(P96))
 
@@ -66,7 +124,9 @@ names(P96M) <- c("Pregunta", "Valor")
 #Está listo para ser graficado
 ```
 
-```{r}
+# Conjunto de preguntas 96
+
+```{r Plot de Preguntas 96, collapse=TRUE}
 # Pregunta 96
 
 ggplot()+
@@ -76,15 +136,15 @@ ggplot()+
   xlab("")+
   ylab("")
 ```
-```{r}
+```{r remover rm, include = FALSE}
 # Remover valores previos de la data anterior (excepto el PNUD2012)
 rm(P96M)
 rm(P96)
 rm(Per96NA)
+
 ```
 
-### Conjunto de preguntas 117
-```{r}
+```{r Preguntas 117, include = FALSE}
 PNUD2012 %>%
   select(P117.1:P117.4) -> P117
 
@@ -99,10 +159,7 @@ P117 %>%
   
   Per117NA * 100 / 2532 -> Per117NA
   cat(c("El", "porcentaje", "de", "NA's", "es:", floor(Per117NA)))
-  
-```
 
-```{r}
 # Utilizar un transpose para convertir a tablas
 P117 <- as.data.frame(t(P117))
 
@@ -121,8 +178,8 @@ names(P117M) <- c("Pregunta", "Valor")
 #Está listo para ser graficado
 ```
 
-## Conjunto de preguntas 117
-```{r}
+# Conjunto de preguntas 117
+```{r Plot de preguntas 117, collapse = TRUE}
 # Preguntas 117
 
 ggplot()+
@@ -132,8 +189,7 @@ ggplot()+
   xlab("")+
   ylab("")
 ```
-
-```{r}
+```{r remover P117, include = FALSE}
   # Remover valores previos
   rm(P117)
   rm(P117M)
@@ -141,16 +197,19 @@ ggplot()+
 ```
 
 # Conjunto de preguntas 118 y 119
-```{r}
+Actualmente en procesamiento.
+
+```{r Data 118 y 119}
 PNUD2012 %>%
   select(P118) -> P118
+PNUD2012 %>%
   select(P119) -> P119
 
 
 ```
 
 # Conjunto de preguntas 121
-```{r}
+```{r Preguntas 121, include = FALSE}
 PNUD2012 %>%
   select(P121.1:P121.3) -> P121
 
@@ -168,7 +227,7 @@ P121 %>%
 
 ```
 
-```{r}
+```{r, include = FALSE}
 # Utilizar un transpose para convertir a tablas
 P121 <- as.data.frame(t(P121))
 
@@ -187,7 +246,7 @@ names(P121M) <- c("Pregunta", "Valor")
 #Está listo para ser graficado
 ```
 
-```{r}
+```{r Plot set 121}
 # Preguntas 121
 
 ggplot()+
@@ -198,7 +257,7 @@ ggplot()+
   ylab("")
 ```
 
-```{r}
+```{r remover 121, include = FALSE}
  # Remover valores previos
   rm(P121)
   rm(P121M)
