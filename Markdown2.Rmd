@@ -63,7 +63,7 @@ knitr::opts_chunk$set(fig.align = "center", echo = TRUE, warning = FALSE, collap
     + Añadidos collapse, warnings e includes (mostrar/no mostrar código en el R Markdown):
       - No se muestra el chunk setup, librerías ni extracción y modificación de la data.
 
-# Introducción al R Markdown
+# Introducción a este R-Markdown
 
 En el presente documento se intenta graficar mediante la base de datos `r params#db` las preguntas relacionadas con el tema de la sociabilidad en Chile.
 
@@ -125,6 +125,7 @@ names(P96M) <- c("Pregunta", "Valor")
 ```
 
 # Conjunto de preguntas 96
+"Utilizando la misma escala de notas de 1 a 7, quiero pedirle que le siga poniendo nota a Chile. ¿Qué nota le pon..."
 
 ```{r Plot de Preguntas 96, collapse=TRUE}
 # Pregunta 96
@@ -179,6 +180,8 @@ names(P117M) <- c("Pregunta", "Valor")
 ```
 
 # Conjunto de preguntas 117
+"¿Con qué frecuencia realiza usted las siguientes actividades con su familia? (conversar sobre asuntos familiares)"
+- 1) Nunca; 2) Solo en algunas ocasiones; 3) Con cierta frecuencia; 4) Habitualmente
 ```{r Plot de preguntas 117, collapse = TRUE}
 # Preguntas 117
 
@@ -196,19 +199,116 @@ ggplot()+
   rm(Per117NA)
 ```
 
-# Conjunto de preguntas 118 y 119
-Actualmente en procesamiento.
 
-```{r Data 118 y 119}
+```{r Data 118 y 119, include = FALSE}
+# "En el último mes, ¿cuántas veces ha sido invitado/a a la casa de amigos o invitado/a a salir?"
+  # Respuestas: 1: Nunca, 2: Sólo una vez, 3: 2 o 3 veces al mes, 4: más de una vez por semana"
+
 PNUD2012 %>%
   select(P118) -> P118
+
+P118 %>%
+  replace_with_na(replace = list(P118 = c(88,99))) -> P118
+
+# Verificar cuántos valores fueron reemplazados por NA's
+  sum(is.na(P118)) -> Per118NA
+  # El número de NA's debería ser 141 en este caso.
+  Per118NA * 100 / 2532 -> Per118NA
+  cat(c("El", "porcentaje", "de", "NA's", "es:", floor(Per118NA)))
+
+# Utilizar un transpose para convertir a tablas
+P118 <- as.data.frame(t(P118))
+
+# Obtener los promedios
+P118M <- rowMeans(P118, na.rm = TRUE)
+
+# Reconvertir el resultado anterior a DF
+P118M <- data.frame(P118M)
+
+# Convertir a Data Table para graficar
+setDT(P118M, keep.rownames = TRUE)
+
+# Cambiar los nombres de las columnas
+names(P118M) <- c("Pregunta", "Valor")
+#Está listo para ser graficado
+```
+
+# Pregunta 118
+"En el último mes, ¿cuántas veces ha sido invitado/a a la casa de amigos o invitado/a a salir?"
+Respuestas: 1) Nunca; 2) Sólo una vez; 3) 2 o 3 veces al mes; 4) Más de una vez por semana
+
+```{r plot 118}
+ggplot()+
+  geom_bar(P118M, mapping = aes(Pregunta, Valor), stat = "identity", 
+           fill =c(2), width = 0.2)+
+  ggtitle("Promedios: preguntas 118")+
+  xlab("")+
+  ylab("")
+
+```
+```{r remover P118, include = FALSE}
+  # Remover valores previos
+  rm(P118)
+  rm(P118M)
+  rm(Per118NA)
+```
+
+```{r P119, include = FALSE}
+##########
 PNUD2012 %>%
   select(P119) -> P119
 
+P119 %>%
+  replace_with_na(replace = list(P119 = c(88,99))) -> P119
 
+# Verificar cuántos valores fueron reemplazados por NA's
+  sum(is.na(P119)) -> Per119NA
+  # El número de NA's debería ser 141 en este caso.
+  Per119NA * 100 / 2532 -> Per119NA
+  cat(c("El", "porcentaje", "de", "NA's", "es:", floor(Per119NA)))
+
+# Utilizar un transpose para convertir a tablas
+P119 <- as.data.frame(t(P119))
+
+# Obtener los promedios
+P119M <- rowMeans(P119, na.rm = TRUE)
+
+# Reconvertir el resultado anterior a DF
+P119M <- data.frame(P119M)
+
+# Convertir a Data Table para graficar
+setDT(P119M, keep.rownames = TRUE)
+
+# Cambiar los nombres de las columnas
+names(P119M) <- c("Pregunta", "Valor")
+#Está listo para ser graficado
+```
+
+# Pregunta 119
+"Con respecto al tema de la amistad, ¿usted diría que...?
+1) Tiene muchos amigos; 2) Tiene pocos amigos; 3) No tiene amigos, solo conocidos
+```{r plot 119}
+ggplot()+
+  geom_bar(P119M, mapping = aes(Pregunta, Valor), stat = "identity", 
+           fill =c(4), width = 0.2)+
+  ggtitle("Promedios: preguntas 119")+
+  xlab("")+
+  ylab("")
+
+```
+```{r remover P119, include = FALSE}
+  # Remover valores previos
+  rm(P119)
+  rm(P1189)
+  rm(Per119NA)
 ```
 
 # Conjunto de preguntas 121
+121.1: "Cuán de acuerdo se encuentra con las siguientes afirmaciones? (Me siento una persona muy querida y valorada)"
+1) Muy en desacuerdo; 2) En desacuerdo; 3) De acuerdo; 4) Muy de acuerdo
+121.2: "Cuán de acuerdo se encuentra con las siguientes afirmaciones? (Frecuentemente me siento solo/a)
+121.3: "Cuán de acuerdo se encuentra con las siguientes afirmaciones? (La gente que me rodea se preocupa mucho por mi)
+
 ```{r Preguntas 121, include = FALSE}
 PNUD2012 %>%
   select(P121.1:P121.3) -> P121
