@@ -1,0 +1,101 @@
+---
+title: "Sociabilidad, PNUD 2009"
+author: "Juan Rivera"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: 
+  html_document:
+    code_folding: show
+    toc: true
+    toc_float: true
+    toc_depth: 3
+params:
+  db: PNUD2009
+---
+
+<!-- Dentro de <style> va el diseño visual del R Markdown -->
+<style>
+#TOC {
+  font-family: Calibri;
+  font-size: 16px; 
+  border-color: #708090;
+  }
+body {
+  background-color: #F5F5F5;
+  color: #333333;
+  font-family: Calibri;
+}
+
+pre {
+  background-color: #F8F8FF;
+}
+
+h1.title {
+  color: #F08080;
+  background-color: #F5F5F5;
+  font-family: Calibri;
+  font-size: 40px;
+}
+h4.author {
+  font-family: Calibri;
+  background-color: #F5F5F5;
+  font-size: 20px;
+}
+
+h4.date {
+  font-family: Calibri;
+  color: "red";
+}
+</style>
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(fig.align = "center", echo = TRUE, warning = FALSE, collapse = TRUE)
+```
+
+```{r libraries, include = FALSE}
+library(haven) #Used for read_sav()
+library(dplyr) #Used for select() et al
+library(naniar) #Used for replace_with_na()
+library(ggplot2) #For plotting
+```
+## Introducción
+
+El presente RMarkdown corresponde a los conjuntos de preguntas 15, 114, 62, 63 y 107 del `r params$db`.
+
+El menú de la izquierda permite el rápido acceso a los conjuntos de preguntas.
+
+Actualizaciones:
+- 25/03/2021: Se creo el archivo RMarkdown con la primera gráfica de la pregunta 15.
+
+```{r file and selection, include = FALSE}
+PNUD2009 <- read_sav("PNUD IDH 2009 SPSS.sav")
+# Preguntas a incluir:
+# P15, P114, P29_B, P62.1, P62.2, P63.1, P63.2, P107.1, P107.2
+
+PNUD2009 %>%
+select(P15) -> P15
+
+per15 <- table(P15)
+tbl15 <- cbind(per15, prop.table(per15))
+tbl15 <- as.data.frame(tbl15)
+colnames(tbl15) <- c("Conteo", "Porcentaje")
+tbl15 %>% mutate(Respuesta = c("1", "2","3","8")) -> tbl15
+tbl15 <- tbl15[c(3,1,2)]
+#Podemos graficar tbl15
+```
+## Pregunta 15
+
+```{r, Pregunta 15}
+ggplot(tbl15, aes(Respuesta, Porcentaje, fill = Conteo, label = round(Porcentaje, digits =3)))+
+  geom_bar(stat = "identity")+
+  geom_text(size = 3, position = position_stack(vjust = 0.1))+
+  labs(
+    title = "Pregunta 15",
+    subtitle = "Con respecto al tema de la amistad, usted diría que...",
+    y = "Porcentajes", 
+    x = "Respuestas",
+    fill = "Número de respuestas",
+    caption = "Fuente: PNUD 2009",
+    tag = "Gráfica 1"
+  )
+
+```
