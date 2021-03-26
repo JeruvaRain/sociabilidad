@@ -71,6 +71,7 @@ PNUD2009 <- read_sav("PNUD IDH 2009 SPSS.sav")
 # Preguntas a incluir:
 # P15, P114, P29_B, P62.1, P62.2, P63.1, P63.2, P107.1, P107.2
 
+# P15 ##############
 PNUD2009 %>%
 select(P15) -> P15
 
@@ -80,7 +81,38 @@ tbl15 <- as.data.frame(tbl15)
 colnames(tbl15) <- c("Conteo", "Porcentaje")
 tbl15 %>% mutate(Respuesta = c("1", "2","3","8")) -> tbl15
 tbl15 <- tbl15[c(3,1,2)]
-#Podemos graficar tbl15
+# Podemos graficar tbl15
+
+# P114 ############
+PNUD2009 %>%
+  select(P114) -> P114
+per114 <- table(P114)
+tbl114 <- cbind(per114, prop.table(per114))
+tbl114 <- as.data.frame(tbl114)
+colnames(tbl114) <- c("Conteo", "Porcentaje")
+tbl114 %>%
+  mutate(Respuesta = c("1", "2", "8", "9")) -> tbl114
+tbl114 <- tbl114[c(3,1,2)]
+#Podemos graficar tbl114
+#Opcionalmente se pueden remover los valores 8 y 9
+#Esto se puede realizar con los códigos opcionales del apéndice
+
+# P29_B ##############
+PNUD2009 %>%
+  select(P29_B) -> P29
+per29 <- table(P29)
+tbl29 <- cbind(per29, prop.table(per29))
+tbl29 <- as.data.frame(tbl29)
+colnames(tbl29) <- c("Conteo", "Porcentaje")
+tbl29 %>%
+  mutate(Respuesta = c("1", "2", "3", "8", "9")) -> tbl29
+tbl29 <- tbl29[c(3,1,2)]
+#Ready
+#También se pueden remover los valores 8 y 9, ver apéndice.
+
+# P62.1
+PNUD2009 %>%
+  select(P62_1, P62_2) -> P62
 ```
 ## Pregunta 15
 
@@ -99,3 +131,93 @@ ggplot(tbl15, aes(Respuesta, Porcentaje, fill = Conteo, label = round(Porcentaje
   )
 
 ```
+
+## Pregunta 114
+
+```{r, Pregunta 114}
+ggplot(tbl114, aes(Respuesta, Porcentaje, fill = Conteo, label = round(Porcentaje, digits = 3)))+
+  geom_bar(stat = "identity")+
+  geom_text(size = 3, position = position_stack(vjust = 0.1))+
+  labs(
+    title = "Pregunta 114",
+    subtitle = "Usted diría que en la actualidad, las familias en Chile son más bien...",
+    y = "Porcentajes",
+    x = "Respuestas",
+    fill = "Número de respuestas",
+    caption = "Fuente: PNUD 2009",
+    tag = "Gráfica 2"
+  )
+
+```
+## Pregunta 29B
+```{r, Pregunta 29B}
+ggplot(tbl29, aes(Respuesta, Porcentaje, fill = Conteo, label = round(Porcentaje, digits = 3)))+
+  geom_bar(stat = "identity")+
+  geom_text(size = 3, position = position_stack(vjust = 0.1))+
+  labs(
+    title = "Pregunta 29B",
+    subtitle = "En Chile han ocurrido diversos cambios en los últimos años. Con respecto a esto, usted cree que hoy, ¿hay...",
+    y = "Porcentajes",
+    x = "Respuestas",
+    fill = "Número de respuestas",
+    caption = "Fuente: PNUD 2009",
+    tag = "Gráfica 3"
+  )
+
+```
+## Conjunto de preguntas 62
+```{r, Pregunta 62}
+
+
+```
+
+## Apéndice
+```{r, Apendice}
+# Códigos opcionales
+# Para remover valores 8 y 9:
+# data %>%
+# replace_with_na(replace = list(data.1 = c(8,9), data.2 = c(8,9),
+  #                             data.3 = c(8,9), data.4 = c(8, 9),
+   #                            data.5 = c(8,9))) -> data
+#Después graficar de manera normal, modificando los valores del mutate que correspondan.
+
+```
+
+## Preguntas y respuestas completas
+
+* P15: "Con respecto al tema de la amistad, usted diría que..."
+  - Tiene muchos amigos: 1
+  - Tiene pocos amigos: 2
+  - No tiene amigos, solo conocidos: 3
+  - NS: 8
+  - NR: 9
+  
+* P114: "Usted diría que en la actualidad, las familias en Chile son más bien..."
+  - Un lugar en el cual encontrar descanso y apoyo: 1
+  - Una fuente de tensiones y problemas: 2
+  - NS: 8
+  - NR: 9
+  
+* P29B: "En Chile han ocurrido diversos cambios en los últimos años. Con respecto a esto, usted cree que hoy, ¿hay mayores, menores, o las mismas oportunidades en el país para…? B. EXPRESAR LO QUE SE PIENSA"
+  - Hay mayores oportunidades: 1
+  - Hay menores oportunidades: 2
+  - Hay las mismas oportunidades: 3
+  - NS: 8
+  - NR: 9
+
+* P62_1 y P62_2: "De la siguiente lista, ¿me podría indicar cuáles son las dos peores maneras de hacer las cosas de los chilenos?"
+  - Nos cuesta decirnos las cosas a la cara: 1
+  - Nos pasamos mucho a llevar: 2
+  - Hacemos las cosas al lote: 3        
+  - Hacemos siempre las cosas a última hora: 4 
+  - Llegamos siempre atrasados: 5                    
+  - Aparentamos lo que no somos: 6
+  - Tomamos decisiones sin consultarle a los demás: 7
+  - NS: 8
+  - NR: 9
+  - Ninguna: 10 
+
+
+
+
+
